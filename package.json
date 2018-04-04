@@ -1,0 +1,24 @@
+{
+  "name": "cmpt218finalproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jerald/cmpt218finalproject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jerald/cmpt218finalproject/issues"
+  },
+  "homepage": "https://github.com/Jerald/cmpt218finalproject#readme",
+  "devDependencies": {
+    "express": "^4.16.3",
+    "mongodb": "^3.0.5"
+  }
+}
