@@ -1,0 +1,5 @@
+Login/Registration:
+  * Hosted on same page
+  * Two forms sending different POST requests - one for login and one for registration
+  * Registration redirects back to same page with registration confirmation text prompted user to login
+  * Login redirects to landing page
