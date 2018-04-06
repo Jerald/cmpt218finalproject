@@ -103,6 +103,10 @@ app.post('/register', function(req,res,next){
                     user['lastName'] = req.body.registerLastName;
                     user['birthday'] = req.body.registerBirthday;
                     user['gender'] = req.body.registerGender;
+                    user['wins'] = 0;
+                    user['losses'] = 0;
+                    user['draws'] = 0;
+                    user['totalMoves'] = 0;
                     console.log(user);
                     console.log(req.body.registerUsername);
 
