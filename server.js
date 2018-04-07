@@ -122,5 +122,43 @@ app.post('/register', function(req,res,next){
     });
 });
 
+app.get('/hiscores', function(req,res,next){
+    var exists = false;
+    var account;
+    MongoClient.connect(url,function(err,db){
+        if(err) console.log(err);
+        else
+        {
+            var current;
+            console.log("Connected to db");
+            var dbo = db.db(database);
+            dbo.listCollections().toArray(function(err, collections){
+              if(err) res.send("couldnt pull users")
+              else
+              {
+                collections.forEach(function(listItem, index){
+                    dbo.collection(listItem.name).find({}).toArray(function(err, result) {
+                        if (err) res.send("failed fetching users");
+                        else
+                        {
+                            if(listItem.name != "system.indexes")
+                            {
+                              console.log(listItem.name)
+                              console.log("wins:", result[0].wins);
+                              console.log("losses:", result[0].losses);
+                              console.log("draws:", result[0].draws);
+                              console.log("totalMoves:", result[0].totalMoves);
+                            }
+                        }
+                        db.close();
+                    });
+                });
+              }
+            });
+
+        }
+    });
+});
+
 app.listen(port);
 console.log('Server running on port ' + port);
