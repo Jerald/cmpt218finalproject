@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
+var async = require('async');
 
 const port = process.env.PORT || 34416;
 
@@ -56,7 +57,7 @@ app.post('/login', function(req,res,next){
                     }
                     else
                     {
-                        res.send(`<!DOCTYPE html><html> <head> <title>Assignment 4</title> <meta charset="utf-8" /> <link rel="stylesheet" href="layout.css"> </head> <body> <div id="textDiv"> <h1>Assignment 4</h1> <h4>Paymon Jalali & Oscar Smith-Sieger</h4> <hr> <h2>The Background</h2> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> <hr> <h2>The Landing Page</h2> </div> <br> <div class="mainDiv"> <h1>Welcome ` + req.body.loginUsername + `!</h1> <button class="pageButton submit">Start Game</button><br> <button class="pageButton delete">Log Out</button> <h2>Your Stats</h2> <table align="center"> <tr><td><strong>Wins</strong></td><td>` + result[0].wins + `</td></tr> <tr><td><strong>Losses</strong></td><td>` + result[0].losses + `</td></tr> <tr><td><strong>Draws</strong></td><td>` + result[0].draws + `</td></tr> <tr><td><strong>Total Moves</strong></td><td>` + result[0].totalMoves + `</td></tr> </table> </div> </body></html>`);
+                        res.send(`<!DOCTYPE html><html> <head> <title>Assignment 4</title> <meta charset="utf-8" /> <link rel="stylesheet" href="layout.css"> </head> <body> <div id="textDiv"> <h1>Assignment 4</h1> <h4>Paymon Jalali & Oscar Smith-Sieger</h4> <hr> <h2>The Background</h2> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> <hr> <h2>The Landing Page</h2> </div> <br> <div class="mainDiv"> <h1>Welcome ` + req.body.loginUsername + `!</h1> <button class="pageButton submit">Start Game</button><br> <button class="pageButton delete">Log Out</button><br><form method="POST" action="/hiscores"><input type="submit" class="pageButton add" value="Hiscores"></form> <h2>Your Stats</h2> <table align="center"> <tr><td><strong>Wins</strong></td><td>` + result[0].wins + `</td></tr> <tr><td><strong>Losses</strong></td><td>` + result[0].losses + `</td></tr> <tr><td><strong>Draws</strong></td><td>` + result[0].draws + `</td></tr> <tr><td><strong>Total Moves</strong></td><td>` + result[0].totalMoves + `</td></tr> </table> </div> </body></html>`);
                     }
                 }
                 db.close();
@@ -122,43 +123,99 @@ app.post('/register', function(req,res,next){
     });
 });
 
-app.get('/hiscores', function(req,res,next){
-    var exists = false;
-    var account;
-    MongoClient.connect(url,function(err,db){
-        if(err) console.log(err);
-        else
-        {
-            var current;
-            console.log("Connected to db");
-            var dbo = db.db(database);
-            dbo.listCollections().toArray(function(err, collections){
-              if(err) res.send("couldnt pull users")
-              else
-              {
-                collections.forEach(function(listItem, index){
-                    dbo.collection(listItem.name).find({}).toArray(function(err, result) {
-                        if (err) res.send("failed fetching users");
-                        else
-                        {
-                            if(listItem.name != "system.indexes")
-                            {
-                              console.log(listItem.name)
-                              console.log("wins:", result[0].wins);
-                              console.log("losses:", result[0].losses);
-                              console.log("draws:", result[0].draws);
-                              console.log("totalMoves:", result[0].totalMoves);
-                            }
-                        }
-                        db.close();
-                    });
-                });
-              }
-            });
-
-        }
+app.post('/hiscores', function(req,res,next){
+    // var table = `<tr><td>Username</td><td>Wins</td><td>Losses</td><td>Draws</td><td>Total Moves</td></tr>`;
+    // MongoClient.connect(url,function(err,db){
+    //     if(err) console.log(err);
+    //     else
+    //     {
+    //         var current;
+    //         console.log("Connected to db");
+    //         var dbo = db.db(database);
+    //         dbo.listCollections().toArray(function(err, collections){
+    //           if(err) res.send("couldnt pull users");
+    //           else
+    //           {
+    //             collections.forEach(function(listItem, index){
+    //                 dbo.collection(listItem.name).find({}).toArray(function(err, result) {
+    //                     if (err) res.send("failed fetching users");
+    //                     else
+    //                     {
+    //                         if(listItem.name != "system.indexes")
+    //                         {
+    //                           console.log(listItem.name)
+    //                           console.log("wins:", result[0].wins);
+    //                           console.log("losses:", result[0].losses);
+    //                           console.log("draws:", result[0].draws);
+    //                           console.log("totalMoves:", result[0].totalMoves);
+    //                           table += `<tr><td>` + listItem.name + `</td><td>` + result[0].wins + `</td><td>` + result[0].losses + `</td><td>` + result[0].draws + `</td><td>` + result[0].totalMoves + `</td></tr>`;
+    //                         }
+    //                     }
+    //                     db.close();
+    //                 });
+    //             });
+    //             res.send(`<!DOCTYPE html><html> <head> <title>Assignment 4</title> <meta charset="utf-8" /> <link rel="stylesheet" href="layout.css"> </head> <body> <div id="textDiv"> <h1>Assignment 4</h1> <h4>Paymon Jalali & Oscar Smith-Sieger</h4> <hr> <h2>The Background</h2> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> <hr> <h2>The Hiscores</h2> </div> <br> <div class="mainDiv"> <table align="center">` + table + `</table> </div> </body></html>`)
+    //           }
+    //         });
+    //     }
+    // });
+    async.waterfall([
+        connect,
+        getUsers,
+        createTable
+    ], function (err, results) {
+        res.send(`<!DOCTYPE html><html> <head> <title>Assignment 4</title> <meta charset="utf-8" /> <link rel="stylesheet" href="layout.css"> </head> <body> <div id="textDiv"> <h1>Assignment 4</h1> <h4>Paymon Jalali & Oscar Smith-Sieger</h4> <hr> <h2>The Background</h2> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> <hr> <h2>The Hiscores</h2> </div> <br> <div class="mainDiv"> <table align="center">` + results + `</table> </div> </body></html>`);
     });
 });
+
+
+
+function connect(connectCallback)
+{
+    MongoClient.connect(url,function(err,db){
+        if(err) connectCallback(err);
+        else
+        {
+            console.log("Connected to db");
+            var dbo = db.db(database);
+            connectCallback(null, dbo, db);
+        }
+    });
+}
+
+function getUsers(dbobj, db, getUsersCallback)
+{
+    dbobj.listCollections().toArray(function(err, collections){
+      if(err) res.send("couldnt pull users");
+      else
+      {
+          getUsersCallback(null, collections, dbobj, db)
+      }
+    });
+}
+
+function createTable(users, dbobject, db, createTableCallback)
+{
+  var table = `<tr><td><strong>Username</strong></td><td><strong>Wins</strong></td><td><strong>Losses</strong></td><td><strong>Draws</strong></td><td><strong>Total Moves</strong></td></tr>`;
+  users.forEach(function(listItem, index){
+      dbobject.collection(listItem.name).find({}).toArray(function(err, result) {
+          if (err) res.send("failed fetching users");
+          else
+          {
+              if(listItem.name != "system.indexes")
+              {
+                table += `<tr><td>` + listItem.name + `</td><td>` + result[0].wins + `</td><td>` + result[0].losses + `</td><td>` + result[0].draws + `</td><td>` + result[0].totalMoves + `</td></tr>`;
+              }
+              if(index >= users.length-1)
+              {
+                db.close();
+                createTableCallback(null, table);
+              }
+          }
+      });
+  });
+}
+
 
 app.listen(port);
 console.log('Server running on port ' + port);
