@@ -218,6 +218,8 @@ function createTable(users, dbobject, db, createTableCallback)
 
 var server = http.createServer(app);
 var socketio = require("socket.io")(server);
+var gameModule = require("./gameModule.js");
+gameModule(socketio, app);
 
 server.listen(port);
 console.log('Server running on port ' + port);
