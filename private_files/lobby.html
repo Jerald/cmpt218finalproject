@@ -1,0 +1,39 @@
+<!-- User creates a lobby and gets sent here. Shows their lobby ID which another user can use to connect to the same lobby. -->
+<!-- If making a new lobby, the post request will have a body akin to "new". Otherwise, it will have the lobby ID to connect to. -->
+
+<!-- This page will initiate a socket.io connection to the server identifying the user with their user name (no real authentication). -->
+<!-- If we want, we can set up a little socket.io chat game in the lobby for the users to mess around with. -->
+
+<!-- Once they decide to start the game (just a basic start game button), we use ajax to load the game page without reloading the browser. -->
+<!-- This dynamic system will clear everything *except* the socket.io function which we'll hook into as a sort of "main loop" for running the game. -->
+<!-- This clearing will keep the site free of garbage and make it functionally equivalent to loading a new page, just without resetting our connections. -->
+
+<!-- See lobby.js for dynamic page protocol stuff. -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Assignment 4</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="layout.css">
+    </head>
+
+    <body>
+        <div id="textDiv">
+            <h1>Assignment 4</h1>
+            <h4>Paymon Jalali & Oscar Smith-Sieger</h4>
+            <hr>
+            <h2>The Background</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <hr>
+            <h2>The Lobby</h2>
+        </div>
+        <br>
+        <div class="mainDiv">
+            <h1>Waiting for another user...</h1>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="lobby.js"></script>
+    </body>
+</html>

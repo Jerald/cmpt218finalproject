@@ -14,6 +14,7 @@ function changePage (data)
     // <here>
 
     // This replaces the entire page with the supplied replacement data:
+    console.log("running")
     $("html").html(data);
 }
 
@@ -23,12 +24,24 @@ function changePage (data)
 // This is an example of the ajax to call to load the game page. Copy the body to where it gets used. It'll probably be triggered by the start button in some way.
 // The url and some other values may need to be changed.
 
+function test()
+{
+    console.log("good");
+}
+
 function ajaxLoadGame ()
 {
     $.ajax({
-        method: "post",
-        url: "/public_files/game.html",
-        success: changePage
+        method: "POST",
+        url: "/game.html",
+        dataType: `html`,
+        data: FormData,
+        success: function (response){
+            console.log(response);
+            var newDoc = document.open("text/html", "replace");
+            newDoc.write(response);
+            newDoc.close();
+        }
     });
 }
 
@@ -38,3 +51,9 @@ var socketio; // This is the connection variable, do NOT delete it.
 // This socketio object still needs to be constructed in some ready function in this script.
 // Construction example: socketio = io();
 
+window.onload = function test()
+{
+    ajaxLoadGame();
+}
+
+socketio = io();
