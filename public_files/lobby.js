@@ -1,0 +1,31 @@
+// See lobby.html for primer on the design for this system.
+
+// Dynamic page protocol will use the following function for cleanup:
+
+function changePage (data)
+{
+    // Clear every function *except* main socket.io loop
+    // For example, if we have a function called foo() which we've set, we clear it with the following:
+    // foo = undefined
+    // This in fact will clear the code from the browser's memory.
+
+    // Add functions to clear below:
+    // <here>
+
+    // This replaces the entire page with the supplied replacement data:
+    $("html").html(data);
+}
+
+// This above function will not need to be cleared itself, as the game page will define it's own. (If not, it won't actually be of any real issue)
+// The changePage function gets called as the success of the ajax which triggers the page change.
+
+// This is an example of the ajax to call to load the game page. Copy the body to where it gets used. It'll probably be triggered by the start button in some way.
+// The url and some other values may need to be changed.
+function ajaxLoadGame ()
+{
+    $.ajax({
+        method: "post",
+        url: "/public_files/game.html",
+        success: changePage
+    });
+}

@@ -1,0 +1,11 @@
+<!-- User creates a lobby and gets sent here. Shows their lobby ID which another user can use to connect to the same lobby. -->
+<!-- If making a new lobby, the post request will have a body akin to "new". Otherwise, it will have the lobby ID to connect to. -->
+
+<!-- This page will initiate a socket.io connection to the server identifying the user with their user name (no real authentication). -->
+<!-- If we want, we can set up a little socket.io chat game in the lobby for the users to mess around with. -->
+
+<!-- Once they decide to start the game (just a basic start game button), we use ajax to load the game page without reloading the browser. -->
+<!-- This dynamic system will clear everything *except* the socket.io function which we'll hook into as a sort of "main loop" for running the game. -->
+<!-- This clearing will keep the site free of garbage and make it functionally equivalent to loading a new page, just without resetting our connections. -->
+
+<!-- See lobby.js for dynamic page protocol stuff. -->
