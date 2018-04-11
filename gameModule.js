@@ -8,6 +8,12 @@ var players;
 
 var currentPlayer;
 
+var MongoClient = require('mongodb').MongoClient;
+
+
+const url = 'mongodb://heroku_j2s6r6g2:iviph9u2pek0ab3v31kue2gach@ds161018.mlab.com:61018/heroku_j2s6r6g2';
+const database = "heroku_j2s6r6g2";
+
 module.exports = gameModule;
 
 function init ()
@@ -19,6 +25,8 @@ function init ()
     };
 
     players = {};
+    players.p1 = {};
+    players.p2 = {};
     players.stats = {};
     players.usernames = {};
     players.startTime = undefined;
@@ -48,8 +56,16 @@ function makeGameCube(layer)
     }
 }
 
-function gameModule(passedSocketio, app)
+function gameModule(passedSocketio, app, test)
 {
+    if (test == true)
+    {
+        players.p1 = players.p2;
+        players.p2 = {};
+        return
+    }
+
+
     // Now I can do my own shit!
     socketio = passedSocketio;
     
@@ -87,6 +103,9 @@ function gameOver(ending)
         players.stats.p1.loses += 1;
         players.stats.p2.wins += 1;
     }
+
+    saveStatsToServer("p1");
+    saveStatsToServer("p2");
 }
 
 function setupStats(playerID)
@@ -101,7 +120,15 @@ function setupStats(playerID)
 
 function saveStatsToServer(playerID)
 {
-    connect(saveStats);
+    MongoClient.connect(url,function(err,db){
+        if(err) connectCallback(err);
+        else
+        {
+            console.log("Connected to db");
+            var dbo = db.db(database);
+            saveStats(null, dbo, db);
+        }
+    });
 
     function saveStats(err, db, database)
     {
@@ -110,6 +137,7 @@ function saveStatsToServer(playerID)
             console.log("MongoDB did bad while trying to save user stats post-game...");
             throw err;
         }
+        console.log("Connected to mongodb for stats saving!");
 
         db.collection(players.usernames[playerID], null, function (err, collection)
         {
@@ -119,6 +147,8 @@ function saveStatsToServer(playerID)
                 throw err;
             }
 
+            console.log("Found user collection for stats saving!");
+
             let statsObj = players.stats[playerID];
 
             let updateObj =
@@ -126,8 +156,9 @@ function saveStatsToServer(playerID)
                 $inc: { totalMoves: statsObj.moves,
                         wins: statsObj.wins,
                         losses: statsObj.loses,
-                        draws: statsObj.draws
-                      }
+                        draws: statsObj.draws,
+                      },
+                $set: { lastGameTime: players.startTime }
             }
 
             collection.findOneAndUpdate({}, updateObj, null, function (err, result)
@@ -137,6 +168,8 @@ function saveStatsToServer(playerID)
                     console.log("MongoDB did bad while finding and updating the user stats post-game...");
                     throw err;
                 }
+
+                console.log("Found and updated user stats for stats saving!");
             });
         });
     }
@@ -144,14 +177,16 @@ function saveStatsToServer(playerID)
 
 function connectionHandler(socket)
 {
-    if (players.p1 == undefined)
+    if (players.p1.mON != true)
     {
         players.p1 = socket;
+        players.p1.mON = true;
         setupPlayer("p1");
     }
-    else if (players.p2 == undefined)
+    else if (players.p2.mON != true)
     {
         players.p2 = socket;
+        players.p2.mON = true;
         setupPlayer("p2");
         
         // Both players are connected
@@ -159,7 +194,13 @@ function connectionHandler(socket)
     }
     else
     {
-        console.log("Too many players!");
+        console.log("Resetting logged in players");
+
+        players.p1 = socket;
+        players.p1.mON = true;
+        setupPlayer("p1");
+
+        players.p2 = {};
     }
 }
 

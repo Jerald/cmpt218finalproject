@@ -44,6 +44,8 @@ $(document).ready(function ()
 
     $("#user").text("Hello " + username + "! Have a good game!");
 
+    $("#quit").click()
+
     console.log("Prepped");
 });
 

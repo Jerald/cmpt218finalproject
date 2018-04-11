@@ -37,6 +37,7 @@ app.post('/goToRegister', function(req,res,next){
 app.post('/login', function(req,res,next){
     var exists = false;
     var account;
+    gameModule(undefined, undefined, true);
     MongoClient.connect(url,function(err,db){
         if(err) console.log(err);
         else
