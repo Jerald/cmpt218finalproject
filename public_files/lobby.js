@@ -12,10 +12,17 @@ function changePage (data)
 
     // Add functions to clear below:
     // <here>
+    startGame = undefined;
+    init = undefined;
+    changePage = undefined;
+    socketio.on("startGame", () => { return; });
 
     // This replaces the entire page with the supplied replacement data:
-    console.log("running")
-    $("html").html(data);
+    console.log("Replacing old page...");
+    
+    document.open();
+    document.write(data);
+    document.close();
 }
 
 // This above function will not need to be cleared itself, as the game page will define it's own. (If not, it won't actually be of any real issue)
@@ -24,24 +31,13 @@ function changePage (data)
 // This is an example of the ajax to call to load the game page. Copy the body to where it gets used. It'll probably be triggered by the start button in some way.
 // The url and some other values may need to be changed.
 
-function test()
+function startGame ()
 {
-    console.log("good");
-}
-
-function ajaxLoadGame ()
-{
+    console.log("Starting game...");
     $.ajax({
         method: "POST",
         url: "/game.html",
-        dataType: `html`,
-        data: FormData,
-        success: function (response){
-            console.log(response);
-            var newDoc = document.open("text/html", "replace");
-            newDoc.write(response);
-            newDoc.close();
-        }
+        success: changePage
     });
 }
 
@@ -50,10 +46,32 @@ function ajaxLoadGame ()
 var socketio; // This is the connection variable, do NOT delete it.
 // This socketio object still needs to be constructed in some ready function in this script.
 // Construction example: socketio = io();
+var player;
+var username;
 
-window.onload = function test()
+
+function init()
 {
-    ajaxLoadGame();
+    username = $("#username").text();
+
+    socketio = io();
+    socketio.on("assignPlayer", assignPlayer); 
+    socketio.on("startGame", startGame);
+    socketio.emit("sendUsername", username);
 }
 
-socketio = io();
+// Leaving this function so we can reconnect (albeit as a different user)
+function assignPlayer (p)
+{
+    player = p;
+    console.log("Assigned a playerID");
+
+    if (player != undefined)
+    {
+        $("#player").text("Player ID: " + player);
+    }
+    else
+    {
+        $("#player").text("Your socket connection has issues! Likely you attempted to connect while two players were already assigned.");        
+    }
+}

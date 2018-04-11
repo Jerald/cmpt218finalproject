@@ -15,3 +15,58 @@ td.gridCell {
     width: 60px;
     height: 60px;
 }
+
+.gridTitle {
+    text-align: center;
+}
+
+.p1 {
+    background-color: red;
+}
+
+.p2 {
+    background-color: blue;
+}
+
+#user {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    padding-top: 30px;
+}
+
+#player {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    padding-top: 50px;
+}
+
+#turn {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    padding-top: 70px;
+}
+
+.yourTurn {
+    color: green;
+}
+
+.notYourTurn {
+    color: red;
+}
+
+#gameEnding {
+    font-size: 24px;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.gameLose {
+    color:red;
+}
+
+.gameWin {
+     color: green;
+ }

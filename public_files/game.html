@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Game</title>
+        <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+
+        <!-- REMOVE FOR PRODUCTION -->
+        <!-- <script src="/socket.io/socket.io.js"></script> -->
+
+        <link rel="stylesheet" href="game.css">
+
+        <script src="game.js"></script>
+    </head>
+
+    <body>
+        <div id="user">Loading your user name...</div>
+        <div id="player">Loading player ID...</div>
+        <div id="turn">Loading turn order...</div>
+
+        <table id="gameBoard">
+            <tr>
+                <td id="top">
+                    <!-- Top -->
+                    <div class="gridTitle">Top</div>
+                </td>
+                <td id="mid">
+                    <!-- Middle -->
+                    <div class="gridTitle">Middle</div>
+                </td>
+                <td id="bot">
+                    <!-- Bottom -->
+                    <div class="gridTitle">Bottom</div>
+                </td>
+            </tr>
+        </table>
+        <div id="gameEnding"></div>
+    </body>
+</html>

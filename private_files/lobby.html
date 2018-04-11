@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!-- User creates a lobby and gets sent here. Shows their lobby ID which another user can use to connect to the same lobby. -->
 <!-- If making a new lobby, the post request will have a body akin to "new". Otherwise, it will have the lobby ID to connect to. -->
 
@@ -10,15 +11,18 @@
 
 <!-- See lobby.js for dynamic page protocol stuff. -->
 
-<!DOCTYPE html>
 <html>
     <head>
         <title>Assignment 4</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="layout.css">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="lobby.js"></script>
     </head>
 
-    <body>
+    <body onload="init()">
         <div id="textDiv">
             <h1>Assignment 4</h1>
             <h4>Paymon Jalali & Oscar Smith-Sieger</h4>
@@ -32,8 +36,6 @@
         <div class="mainDiv">
             <h1>Waiting for another user...</h1>
         </div>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="lobby.js"></script>
-    </body>
-</html>
+    <!-- </body> -->
+    <!-- <div username=""></div> -->
+<!-- </html> -->

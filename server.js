@@ -8,8 +8,8 @@ var async = require('async');
 
 const port = process.env.PORT || 34416;
 
-const url = 'mongodb://root:root@ds231589.mlab.com:31589/cmpt218asn4';
-const database = "cmpt218asn4";
+const url = 'mongodb://heroku_j2s6r6g2:iviph9u2pek0ab3v31kue2gach@ds161018.mlab.com:61018/heroku_j2s6r6g2';
+const database = "heroku_j2s6r6g2";
 
 var activeToken;
 var isActive = false;
@@ -57,7 +57,7 @@ app.post('/login', function(req,res,next){
                     }
                     else
                     {
-                        res.send(`<!DOCTYPE html><html> <head> <title>Assignment 4</title> <meta charset="utf-8" /> <link rel="stylesheet" href="layout.css"> </head> <body> <div id="textDiv"> <h1>Assignment 4</h1> <h4>Paymon Jalali & Oscar Smith-Sieger</h4> <hr> <h2>The Background</h2> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> <hr> <h2>The Landing Page</h2> </div> <br> <div class="mainDiv"> <h1>Welcome ` + req.body.loginUsername + `!</h1> <form method="POST" action="startGame"><input type="submit" class="pageButton submit" value="Start Game"></form><br> <button class="pageButton delete">Log Out</button><br><form method="POST" action="/hiscores"><input type="submit" class="pageButton add" value="Hiscores"></form> <h2>Your Stats</h2> <table align="center"> <tr><td><strong>Wins</strong></td><td>` + result[0].wins + `</td></tr> <tr><td><strong>Losses</strong></td><td>` + result[0].losses + `</td></tr> <tr><td><strong>Draws</strong></td><td>` + result[0].draws + `</td></tr> <tr><td><strong>Total Moves</strong></td><td>` + result[0].totalMoves + `</td></tr> </table> </div> </body></html>`);
+                        res.send(`<!DOCTYPE html><html> <head> <title>Assignment 4</title> <meta charset="utf-8" /> <link rel="stylesheet" href="layout.css"> </head> <body> <div id="textDiv"> <h1>Assignment 4</h1> <h4>Paymon Jalali & Oscar Smith-Sieger</h4> <hr> <h2>The Background</h2> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> <hr> <h2>The Landing Page</h2> </div> <br> <div class="mainDiv"> <h1>Welcome ` + req.body.loginUsername + `!</h1> <form method="POST" action="startGame"><input type="submit" class="pageButton submit" value="Start Game"><input type="text" name="username" value="${req.body.loginUsername}" style="visibility: hidden; height:0px; width:0px;"></form><br> <button class="pageButton delete">Log Out</button><br><form method="POST" action="/hiscores"><input type="submit" class="pageButton add" value="Hiscores"></form> <h2>Your Stats</h2> <table align="center"> <tr><td><strong>Wins</strong></td><td>` + result[0].wins + `</td></tr> <tr><td><strong>Losses</strong></td><td>` + result[0].losses + `</td></tr> <tr><td><strong>Draws</strong></td><td>` + result[0].draws + `</td></tr> <tr><td><strong>Total Moves</strong></td><td>` + result[0].totalMoves + `</td></tr> </table> </div> </body></html>`);
                     }
                 }
                 db.close();
@@ -67,11 +67,19 @@ app.post('/login', function(req,res,next){
 });
 
 app.post('/startGame', function(req,res,next){
-    res.sendFile(__dirname + "/private_files/lobby.html")
+    // res.sendFile(__dirname + "/private_files/lobby.html");
+
+    let file = fs.readFileSync(__dirname + "/private_files/lobby.html", "utf8");
+    let username = req.body.username;
+    file += `<div id="username">${username}</div>`;
+    file += `</body>`;
+    file += `</html>`;
+    res.send(file);
+    res.end();
 });
 
 app.post('/game.html', function(req,res,next){
-    res.sendFile(__dirname + "/private_files/game.html")
+    res.sendFile(__dirname + "/public_files/game.html")
 });
 
 app.post('/register', function(req,res,next){
@@ -228,10 +236,6 @@ var server = http.createServer(app);
 var socketio = require("socket.io")(server);
 var gameModule = require("./gameModule.js");
 gameModule(socketio, app);
-
-socketio.on('connection', function(socket){
-    console.log('a user connected');
-});
 
 server.listen(port);
 console.log('Server running on port ' + port);
