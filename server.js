@@ -57,7 +57,11 @@ app.post('/login', function(req,res,next){
                     }
                     else
                     {
+<<<<<<< HEAD
                         res.send(`<!DOCTYPE html><html> <head> <title>Assignment 4</title> <meta charset="utf-8" /> <link rel="stylesheet" href="layout.css"> </head> <body> <div id="textDiv"> <h1>Assignment 4</h1> <h4>Paymon Jalali & Oscar Smith-Sieger</h4> <hr> <h2>The Background</h2> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> <hr> <h2>The Landing Page</h2> </div> <br> <div class="mainDiv"> <h1>Welcome ` + req.body.loginUsername + `!</h1> <form method="POST" action="startGame"><input type="submit" class="pageButton submit" value="Start Game"><input type="text" name="username" value="${req.body.loginUsername}" style="visibility: hidden; height:0px; width:0px;"></form><br> <button class="pageButton delete">Log Out</button><br><form method="POST" action="/hiscores"><input type="submit" class="pageButton add" value="Hiscores"></form> <h2>Your Stats</h2> <table align="center"> <tr><td><strong>Wins</strong></td><td>` + result[0].wins + `</td></tr> <tr><td><strong>Losses</strong></td><td>` + result[0].losses + `</td></tr> <tr><td><strong>Draws</strong></td><td>` + result[0].draws + `</td></tr> <tr><td><strong>Total Moves</strong></td><td>` + result[0].totalMoves + `</td></tr> </table> </div> </body></html>`);
+=======
+                        res.send(`<!DOCTYPE html><html> <head> <title>Assignment 4</title> <meta charset="utf-8" /> <link rel="stylesheet" href="layout.css"> </head> <body> <div id="textDiv"> <h1>Assignment 4</h1> <h4>Paymon Jalali & Oscar Smith-Sieger</h4> <hr> <h2>The Background</h2> <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> <hr> <h2>The Landing Page</h2> </div> <br> <div class="mainDiv"> <h1 id="loggedInUser">Welcome ` + req.body.loginUsername + `!</h1> <form method="POST" action="startGame"><input type="submit" class="pageButton submit" value="Start Game"></form><br> <button class="pageButton delete">Log Out</button><br><form method="POST" action="/hiscores"><input type="submit" class="pageButton add" value="Hiscores"></form> <h2>Your Stats</h2> <table align="center"> <tr><td><strong>Wins</strong></td><td>` + result[0].wins + `</td></tr> <tr><td><strong>Losses</strong></td><td>` + result[0].losses + `</td></tr> <tr><td><strong>Draws</strong></td><td>` + result[0].draws + `</td></tr> <tr><td><strong>Total Moves</strong></td><td>` + result[0].totalMoves + `</td></tr> </table> </div> </body></html>`);
+>>>>>>> 898ed2b7c39e88171581b5a80211124c896e13b4
                     }
                 }
                 db.close();
@@ -124,6 +128,7 @@ app.post('/register', function(req,res,next){
                     user['losses'] = 0;
                     user['draws'] = 0;
                     user['totalMoves'] = 0;
+                    user['lastGameTime'] = "";
                     console.log(user);
                     console.log(req.body.registerUsername);
 
